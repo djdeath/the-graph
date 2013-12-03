@@ -52,10 +52,10 @@
       // The actual pan state
       _pan: { x: 0, y: 0 },
       drag: { x: 0, y: 0 },
-      // The actual zoom state
-      zoom: 1,
+      // The graph is rendered at
+      zoom: 2,
       // User-visible zoom state
-      scale: 1,
+      scale: 2,
       scaleMax: 2,
       scaleMin: 0.25,
       // Pinching gesture
@@ -199,6 +199,10 @@
         return this._pan;
       },
       panning: function (pan, scale) {
+        if (!scale) {
+          scale = this.scale / this.zoom;
+        }
+        console.log(scale);
         // Panning is with just css transform
         theGraph.transform(this, pan.x - this.bump.x, pan.y - this.bump.y, scale);
       },
@@ -312,14 +316,14 @@
         // Slower zoom change that redraws graph, debounced from scaleChanged
         // Debounced from scaleChanged
         clearTimeout(this.enhanceTimeout);
-        this.zoom = this.scale;
+        // this.zoom = this.scale;
 
         // Class for styling sizes
         this.className = this.zoom >= 1.5 ? "big" : (this.zoom >= 0.8 ? "normal" : (this.zoom >= 0.5 ? "small" : "tiny"));
 
         // Transform offset to pan
         // this.panChanged sends the new zoom to nodes
-        this.panned(this.scalePanD);
+        // this.panned(this.scalePanD);
       },
       nodeMoved: function () {
         this.calcMinMax();
