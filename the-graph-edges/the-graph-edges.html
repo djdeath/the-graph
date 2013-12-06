@@ -6,7 +6,9 @@
       xmlns:xlink="http://www.w3.org/1999/xlink" 
       xmlns="http://www.w3.org/2000/svg"       
       version="1.1">
-      <g id="connections" transform="translate(500,500)">
+      <g id="master" transform="translate(500,500)">
+        <g id="connections"></g>
+        <g id="porthints"></g>
       </g>
       <defs>
         <filter id="bulbfilter" x="0" y="0">
@@ -57,7 +59,7 @@
             child.drawEdge();
           });
         }
-        this.$.connections.setAttribute("transform", "translate("+info.bump.x+","+info.bump.y+")");
+        this.$.master.setAttribute("transform", "translate("+info.bump.x+","+info.bump.y+")");
       }
     });
 
