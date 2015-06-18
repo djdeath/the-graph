@@ -85,16 +85,16 @@
     mixins: [TheGraph.mixins.FakeMouse],
     getInitialState: function() {
       return {
-        graph: this.props.graph,
+        //graph: this.props.graph,
         displaySelectionGroup: true,
         edgePreview: null,
         edgePreviewX: 0,
         edgePreviewY: 0,
-        forceSelection: false,
-        selectedNodes: [],
-        errorNodes: [],
-        selectedEdges: [],
-        animatedEdges: [],
+        //forceSelection: false,
+        //selectedNodes: [],
+        //errorNodes: [],
+        //selectedEdges: [],
+        //animatedEdges: [],
         offsetX: this.props.offsetX,
         offsetY: this.props.offsetY
       };
@@ -175,11 +175,11 @@
       });
       this.markDirty();
     },
-    addEdge: function (edge) {
-      this.state.graph.addEdge(edge.from.process, edge.from.port, edge.to.process, edge.to.port, edge.metadata);
-    },
+    // addEdge: function (edge) {
+    //   this.state.graph.addEdge(edge.from.process, edge.from.port, edge.to.process, edge.to.port, edge.metadata);
+    // },
     moveGroup: function (nodes, dx, dy) {
-      var graph = this.state.graph;
+      var graph = this.props.graph;
 
       // Move each group member
       var len = nodes.length;
@@ -222,7 +222,7 @@
               outports: outports
             };
           }
-          
+
           var i, port, len;
           for (i=0, len=component.outports.length; i<len; i++) {
             port = component.outports[i];
@@ -342,30 +342,30 @@
       }
       return exp;
     },
-    setSelectedNodes: function (nodes) {
-      this.setState({
-        selectedNodes: nodes
-      });
-      this.markDirty();
-    },
-    setErrorNodes: function (errors) {
-      this.setState({
-        errorNodes: errors
-      });
-      this.markDirty();
-    },
-    setSelectedEdges: function (edges) {
-      this.setState({
-        selectedEdges: edges
-      });
-      this.markDirty();
-    },
-    setAnimatedEdges: function (edges) {
-      this.setState({
-        animatedEdges: edges
-      });
-      this.markDirty();
-    },
+    // setSelectedNodes: function (nodes) {
+    //   this.setState({
+    //     selectedNodes: nodes
+    //   });
+    //   this.markDirty();
+    // },
+    // setErrorNodes: function (errors) {
+    //   this.setState({
+    //     errorNodes: errors
+    //   });
+    //   this.markDirty();
+    // },
+    // setSelectedEdges: function (edges) {
+    //   this.setState({
+    //     selectedEdges: edges
+    //   });
+    //   this.markDirty();
+    // },
+    // setAnimatedEdges: function (edges) {
+    //   this.setState({
+    //     animatedEdges: edges
+    //   });
+    //   this.markDirty();
+    // },
     updatedIcons: {},
     updateIcon: function (nodeId, icon) {
       this.updatedIcons[nodeId] = icon;
@@ -397,7 +397,7 @@
       this.dirty = false;
 
       var self = this;
-      var graph = this.state.graph;
+      var graph = this.props.graph;
       var library = this.props.library;
       var selectedIds = [];
 
@@ -423,14 +423,14 @@
         if (!node.metadata) {
           node.metadata = {};
         }
-        if (node.metadata.x === undefined) { 
-          node.metadata.x = 0; 
+        if (node.metadata.x === undefined) {
+          node.metadata.x = 0;
         }
-        if (node.metadata.y === undefined) { 
-          node.metadata.y = 0; 
+        if (node.metadata.y === undefined) {
+          node.metadata.y = 0;
         }
-        if (node.metadata.width === undefined) { 
-          node.metadata.width = TheGraph.config.nodeWidth; 
+        if (node.metadata.width === undefined) {
+          node.metadata.width = TheGraph.config.nodeWidth;
         }
         node.metadata.height = TheGraph.config.nodeHeight;
         if (TheGraph.config.autoSizeNode && componentInfo) {
@@ -453,7 +453,7 @@
         } else if (componentInfo && componentInfo.iconsvg) {
           iconsvg = componentInfo.iconsvg;
         }
-        var selected = (self.state.selectedNodes[key] === true);
+        var selected = (self.props.selectedNodes[key] === true);
         if (selected) {
           selectedIds.push(key);
         }
@@ -476,7 +476,7 @@
           ports: self.getPorts(graph, key, node.component),
           onNodeSelection: self.props.onNodeSelection,
           selected: selected,
-          error: (self.state.errorNodes[key] === true),
+          error: (self.props.errorNodes[key] === true),
           showContext: self.props.showContext,
           highlightPort: highlightPort
         };
@@ -528,8 +528,8 @@
           label: label,
           route: route,
           onEdgeSelection: self.props.onEdgeSelection,
-          selected: (self.state.selectedEdges.indexOf(edge) !== -1),
-          animated: (self.state.animatedEdges.indexOf(edge) !== -1),
+          selected: (self.props.selectedEdges.indexOf(edge) !== -1),
+          animated: (self.props.animatedEdges.indexOf(edge) !== -1),
           showContext: self.props.showContext
         };
 
@@ -541,7 +541,7 @@
       var iips = graph.initializers.map(function (iip) {
         var target = graph.getNode(iip.to.node);
         if (!target) { return; }
-        
+
         var targetPort = self.getNodeInport(graph, iip.to.node, iip.to.port, 0, target.component);
         var tX = target.metadata.x;
         var tY = target.metadata.y + targetPort.y;
@@ -570,8 +570,8 @@
         var label = key;
         var nodeKey = inport.process;
         var portKey = inport.port;
-        if (!inport.metadata) { 
-          inport.metadata = {x:0, y:0}; 
+        if (!inport.metadata) {
+          inport.metadata = {x:0, y:0};
         }
         var metadata = inport.metadata;
         if (!metadata.x) { metadata.x = 0; }
@@ -645,8 +645,8 @@
         var label = key;
         var nodeKey = outport.process;
         var portKey = outport.port;
-        if (!outport.metadata) { 
-          outport.metadata = {x:0, y:0}; 
+        if (!outport.metadata) {
+          outport.metadata = {x:0, y:0};
         }
         var metadata = outport.metadata;
         if (!metadata.x) { metadata.x = 0; }
@@ -744,7 +744,7 @@
       });
 
       // Selection pseudo-group
-      if (this.state.displaySelectionGroup &&
+      if (this.props.displaySelectionGroup &&
           selectedIds.length >= 2) {
         var limits = TheGraph.findMinMax(graph, selectedIds);
         if (limits) {
@@ -830,13 +830,13 @@
         outportsGroup
       ];
 
-      var selectedClass = (this.state.forceSelection ||
+      var selectedClass = (this.props.forceSelection ||
                            selectedIds.length>0) ? ' selection' : '';
 
       var containerOptions = TheGraph.merge(TheGraph.config.graph.container, { className: 'graph' + selectedClass });
       return TheGraph.factories.graph.createGraphContainerGroup.call(this, containerOptions, containerContents);
 
     }
-  }));  
+  }));
 
 })(this);

@@ -108,7 +108,12 @@
             displaySelectionGroup: this.displaySelectionGroup,
             forceSelection: this.forceSelection,
             offsetY: this.offsetY,
-            offsetX: this.offsetX
+            offsetX: this.offsetX,
+
+            selectedNodes: this.selectedNodesHash,
+            selectedEdges: this.selectedEdges,
+            errorNodes: this.errorNodes,
+            animatedEdges: this.animatedEdges,
           }),
           this.$.svgcontainer
         );
@@ -169,20 +174,20 @@
       },
       selectedNodesHashChanged: function () {
         if (!this.graphView) { return; }
-        this.graphView.setSelectedNodes(this.selectedNodesHash);
+        this.appView.setProps({ selectedNodes: this.selectedNodesHash });
       },
       errorNodesChanged: function () {
         if (!this.graphView) { return; }
-        this.graphView.setErrorNodes(this.errorNodes);
+        this.appView.setProps({ errorNodes: this.errorNodes });
       },
       selectedEdgesChanged: function () {
         if (!this.graphView) { return; }
-        this.graphView.setSelectedEdges(this.selectedEdges);
+        this.appView.setProps({ selectedEdges: this.selectedEdges });
         this.fire('edges', this.selectedEdges);
       },
       animatedEdgesChanged: function () {
         if (!this.graphView) { return; }
-        this.graphView.setAnimatedEdges(this.animatedEdges);
+        this.appView.setProps({ animatedEdges: this.animatedEdges });
       },
       fireChanged: function (event) {
         this.fire("changed", this);
@@ -284,7 +289,7 @@
             }
           }
         }
-  
+
         this.graph.endTransaction("autolayout");
 
         // Fit to window
@@ -309,8 +314,8 @@
         });
       },
       updateIcon: function (nodeId, icon) {
-        if (!this.graphView) { return; }
-        this.graphView.updateIcon(nodeId, icon);
+      //   if (!this.graphView) { return; }
+      //   this.graphView.updateIcon(nodeId, icon);
       },
       rerender: function (options) {
         // This is throttled with rAF internally
@@ -322,8 +327,8 @@
         this.graph.addNode(id, component, metadata);
       },
       getPan: function () {
-        if (!this.appView) { 
-          return [0, 0]; 
+        if (!this.appView) {
+          return [0, 0];
         }
         return [this.appView.state.x, this.appView.state.y];
       },
@@ -336,20 +341,20 @@
         });
       },
       getScale: function () {
-        if (!this.appView) { 
-          return 1; 
+        if (!this.appView) {
+          return 1;
         }
         return this.appView.state.scale;
       },
       displaySelectionGroupChanged: function () {
         if (!this.graphView) { return; }
-        this.graphView.setState({
+        this.appView.setProps({
           displaySelectionGroup: this.displaySelectionGroup
         });
       },
       forceSelectionChanged: function () {
         if (!this.graphView) { return; }
-        this.graphView.setState({
+        this.appView.setProps({
           forceSelection: this.forceSelection
         });
       },
@@ -357,7 +362,7 @@
         this.appView.focusNode(node);
       },
       menusChanged: function () {
-        // Only if the object itself changes, 
+        // Only if the object itself changes,
         // otherwise builds menu from reference every time menu shown
         if (!this.appView) { return; }
         this.appView.setProps({menus: this.menus});
@@ -373,7 +378,7 @@
         }.bind(this), 200);
       },
       mergeComponentDefinition: function (component, definition) {
-        // In cases where a component / subgraph ports change, 
+        // In cases where a component / subgraph ports change,
         // we don't want the connections hanging in middle of node
         // TODO visually indicate that port is a ghost
         if (component === definition) {
