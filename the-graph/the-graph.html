@@ -101,8 +101,11 @@
             library: this.library,
             menus: this.menus,
             editable: this.editable,
+
+            onPreEdgeCreation: this.onPreEdgeCreation.bind(this),
             onEdgeSelection: this.onEdgeSelection.bind(this),
             onNodeSelection: this.onNodeSelection.bind(this),
+
             onPanScale: this.onPanScale.bind(this),
             getMenuDef: this.getMenuDef,
             displaySelectionGroup: this.displaySelectionGroup,
